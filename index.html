@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚀 Future Quest - 8th Grade English</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  min-height: 100vh;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+.stars {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.star {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  animation: twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle {
+  from { opacity: 0.2; }
+  to { opacity: 1; }
+}
+
+#game-container {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 28px;
+  width: 100%;
+  text-align: center;
+}
+
+/* TITLE */
+.game-title {
+  font-size: 2.8em;
+  font-weight: 900;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, #f5a623, #ff6b35);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  margin-bottom: 6px;
+}
+
+.game-subtitle {
+  font-size: 1em;
+  color: #a0b4d0;
+  margin-bottom: 18px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.rocket-anim {
+  font-size: 5em;
+  display: block;
+  margin: 10px auto;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50% { transform: translateY(-18px) rotate(5deg); }
+}
+
+.intro-text {
+  font-size: 0.95em;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+
+.skill-tags {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.tag {
+  background: rgba(102,126,234,0.25);
+  border: 1px solid rgba(102,126,234,0.5);
+  border-radius: 30px;
+  padding: 5px 14px;
+  font-size: 0.82em;
+  color: #a0b4ff;
+}
+
+/* BUTTONS */
+.btn {
+  display: inline-block;
+  padding: 13px 28px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1em;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s;
+  margin: 6px;
+  letter-spacing: 0.5px;
+}
+
+.btn-start {
+  background: linear-gradient(135deg, #f5a623, #e8890c);
+  color: #fff;
+  font-size: 1.1em;
+  padding: 15px 40px;
+}
+
+.btn-start:hover { transform: scale(1.06); box-shadow: 0 6px 25px rgba(245,166,35,0.5); }
+
+.btn-map {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 9px 18px;
+  font-size: 0.85em;
+}
+
+.btn-map:hover { background: rgba(255,255,255,0.2); }
+
+.btn-next {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  font-size: 1em;
+  padding: 13px 35px;
+  margin-top: 8px;
+  display: none;
+}
+
+.btn-next:hover { transform: scale(1.04); box-shadow: 0 5px 20px rgba(102,126,234,0.5); }
+
+.btn-play-again {
+  background: linear-gradient(135deg, #f5a623, #e8890c);
+  color: #fff;
+}
+
+.btn-play-again:hover { transform: scale(1.05); }
+
+/* HUD */
+.hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 14px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 15px;
+  padding: 10px 18px;
+  gap: 12px;
+}
+
+.hud-xp { font-size: 0.9em; white-space: nowrap; }
+.hud-xp strong { color: #f5a623; }
+
+.xp-bar-wrap { flex: 1; }
+
+.xp-bg {
+  background: rgba(255,255,255,0.15);
+  border-radius: 8px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.xp-fill {
+  background: linear-gradient(90deg, #f5a623, #ff6b35);
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.6s ease;
+}
+
+.xp-label { font-size: 0.72em; color: rgba(255,255,255,0.5); margin-top: 3px; }
+
+.hud-score { font-size: 0.9em; white-space: nowrap; }
+.hud-score strong { color: #a0e060; }
+
+/* MISSION MAP */
+.map-title { font-size: 1.5em; margin-bottom: 18px; }
+
+.mission-list { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+
+.mission-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255,255,255,0.06);
+  border: 2px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-align: left;
+}
+
+.mission-card:hover:not(.locked) {
+  background: rgba(255,255,255,0.13);
+  border-color: #f5a623;
+  transform: translateX(4px);
+}
+
+.mission-card.done { border-color: #56ab2f; background: rgba(86,171,47,0.1); }
+.mission-card.locked { opacity: 0.45; cursor: not-allowed; }
+
+.m-icon { font-size: 2em; flex-shrink: 0; }
+.m-info { flex: 1; }
+.m-info h3 { font-size: 0.95em; font-weight: 700; margin-bottom: 2px; }
+.m-info p { font-size: 0.78em; color: rgba(255,255,255,0.6); }
+.m-status { font-size: 1.3em; margin-left: auto; }
+
+/* MISSION HEADER */
+.mission-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, rgba(102,126,234,0.35), rgba(118,75,162,0.35));
+  border: 1px solid rgba(102,126,234,0.4);
+  border-radius: 14px;
+  padding: 14px 20px;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.mb-icon { font-size: 2.2em; }
+.mb-title { text-align: left; }
+.mb-title h2 { font-size: 1.15em; }
+.mb-title p { font-size: 0.8em; color: rgba(255,255,255,0.7); }
+
+/* PROGRESS DOTS */
+.dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  border: 2px solid rgba(255,255,255,0.3);
+  transition: all 0.3s;
+}
+
+.dot.active { background: #f5a623; border-color: #f5a623; transform: scale(1.2); }
+.dot.correct { background: #56ab2f; border-color: #56ab2f; }
+.dot.wrong { background: #e74c3c; border-color: #e74c3c; }
+
+/* QUESTION */
+.question-box {
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 22px;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.q-number {
+  font-size: 0.72em;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #f5a623;
+  margin-bottom: 8px;
+}
+
+.q-text {
+  font-size: 1.1em;
+  line-height: 1.65;
+  margin-bottom: 8px;
+}
+
+.q-hint {
+  font-size: 0.82em;
+  color: rgba(255,255,255,0.5);
+  font-style: italic;
+}
+
+/* ANSWER OPTIONS */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.opt-btn {
+  background: rgba(255,255,255,0.07);
+  border: 2px solid rgba(255,255,255,0.15);
+  color: #fff;
+  border-radius: 12px;
+  padding: 14px 12px;
+  font-size: 0.93em;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.opt-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.16);
+  border-color: #f5a623;
+  transform: translateY(-2px);
+}
+
+.opt-btn.correct { background: rgba(86,171,47,0.3); border-color: #56ab2f; animation: pop 0.4s; }
+.opt-btn.wrong { background: rgba(231,76,60,0.3); border-color: #e74c3c; }
+.opt-btn:disabled { cursor: default; }
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+/* FEEDBACK */
+.feedback-box {
+  border-radius: 12px;
+  padding: 13px 16px;
+  font-size: 0.92em;
+  line-height: 1.5;
+  width: 100%;
+  margin-bottom: 10px;
+  display: none;
+}
+
+.feedback-box.show { display: block; }
+.feedback-box.ok { background: rgba(86,171,47,0.2); border: 1px solid #56ab2f; color: #b0f078; }
+.feedback-box.no { background: rgba(231,76,60,0.2); border: 1px solid #e74c3c; color: #ff9999; }
+
+/* MISSION COMPLETE */
+.big-icon { font-size: 5em; display: block; margin: 14px auto; }
+.result-title { font-size: 1.8em; font-weight: 900; color: #f5a623; margin-bottom: 8px; }
+.result-sub { font-size: 0.95em; color: rgba(255,255,255,0.75); margin-bottom: 12px; }
+.xp-big { font-size: 3em; font-weight: 900; color: #f5a623; }
+.xp-big-label { font-size: 0.85em; color: rgba(255,255,255,0.5); margin-top: 4px; margin-bottom: 18px; }
+
+/* FINAL SCREEN */
+.badges-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 14px 0;
+}
+
+.badge {
+  border-radius: 30px;
+  padding: 5px 14px;
+  font-size: 0.8em;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.4);
+}
+
+.badge.earned {
+  background: rgba(245,166,35,0.2);
+  border-color: #f5a623;
+  color: #f5a623;
+}
+
+.grade-chip {
+  font-size: 1.15em;
+  font-weight: 700;
+  color: #a0e060;
+  margin: 8px 0 14px;
+}
+
+.final-note {
+  font-size: 0.88em;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.65;
+  margin-bottom: 22px;
+}
+
+/* SCREENS */
+.screen { display: none; width: 100%; }
+.screen.on { display: flex; flex-direction: column; align-items: center; }
+
+/* FADE */
+.fade { animation: fadeUp 0.4s ease; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* RESPONSIVE */
+@media (max-width: 480px) {
+  .options-grid { grid-template-columns: 1fr; }
+  .game-title { font-size: 2em; }
+  .hud { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div id="game-container">
+
+  <!-- ═══════════════════ TITLE ═══════════════════ -->
+  <div class="screen on" id="s-title">
+    <div class="card fade">
+      <span class="rocket-anim">🚀</span>
+      <div class="game-title">FUTURE QUEST</div>
+      <div class="game-subtitle">8th Grade English · 2º Bimestre</div>
+      <p class="intro-text">
+        A time glitch has scrambled the English language!<br>
+        Complete <strong>5 missions</strong> to restore the future timeline and become a <strong>Future Master</strong>!
+      </p>
+      <div class="skill-tags">
+        <span class="tag">🔮 will (affirmative)</span>
+        <span class="tag">🚫 won't (negative)</span>
+        <span class="tag">❓ will (questions)</span>
+        <span class="tag">⚡ will vs. going to</span>
+        <span class="tag">🤖 future vocabulary</span>
+      </div>
+      <button class="btn btn-start" onclick="go('map')">▶ START GAME</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ MAP ═══════════════════ -->
+  <div class="screen" id="s-map">
+    <div class="hud fade">
+      <div class="hud-xp">⭐ XP: <strong id="xp-h">0</strong></div>
+      <div class="xp-bar-wrap">
+        <div class="xp-bg"><div class="xp-fill" id="xp-bar" style="width:0%"></div></div>
+        <div class="xp-label">0 / 500 XP total</div>
+      </div>
+      <div class="hud-score">✅ <strong id="score-h">0/25</strong></div>
+    </div>
+    <div class="card fade">
+      <div class="map-title">🗺️ Mission Map</div>
+      <div class="mission-list" id="mission-list"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ PLAY ═══════════════════ -->
+  <div class="screen" id="s-play">
+    <div class="hud fade">
+      <div class="hud-xp">⭐ XP: <strong id="xp-p">0</strong></div>
+      <div class="xp-bar-wrap">
+        <div class="xp-bg"><div class="xp-fill" id="xp-bar2" style="width:0%"></div></div>
+        <div class="xp-label" id="q-counter">Q 1/5</div>
+      </div>
+      <button class="btn btn-map" onclick="go('map')">🗺️ Map</button>
+    </div>
+    <div id="m-banner" class="fade" style="width:100%"></div>
+    <div class="dots fade" id="dots"></div>
+    <div id="q-area" class="fade" style="width:100%"></div>
+    <div id="feedback" class="feedback-box"></div>
+    <button class="btn btn-next" id="btn-next" onclick="nextQ()">NEXT ➤</button>
+  </div>
+
+  <!-- ═══════════════════ MISSION COMPLETE ═══════════════════ -->
+  <div class="screen" id="s-done">
+    <div class="card fade">
+      <span class="big-icon" id="done-icon">🎉</span>
+      <div class="result-title" id="done-title">Mission Complete!</div>
+      <div class="result-sub" id="done-msg"></div>
+      <div class="xp-big" id="done-xp"></div>
+      <div class="xp-big-label">XP earned this mission</div>
+      <button class="btn btn-start" onclick="go('map')">🗺️ Back to Map</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ FINAL ═══════════════════ -->
+  <div class="screen" id="s-final">
+    <div class="card fade">
+      <span class="big-icon" id="f-icon">🏆</span>
+      <div class="result-title">QUEST COMPLETE!</div>
+      <div class="result-sub">The timeline has been restored!</div>
+      <div class="xp-big" id="f-xp"></div>
+      <div class="xp-big-label">Total XP</div>
+      <div class="grade-chip" id="f-grade"></div>
+      <div class="badges-row" id="f-badges"></div>
+      <div class="final-note" id="f-note"></div>
+      <button class="btn btn-play-again btn-start" onclick="restart()">🔄 Play Again</button>
+      <button class="btn btn-map" onclick="go('map')">📊 See Map</button>
+    </div>
+  </div>
+
+</div><!-- end game-container -->
+
+<script>
+// ─── Stars ──────────────────────────────────────────
+(function(){
+  const c = document.getElementById('stars');
+  for(let i=0;i<70;i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random()*3+1;
+    s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${Math.random()*2+1.5}s;`;
+    c.appendChild(s);
+  }
+})();
+
+// ─── Mission Data ────────────────────────────────────
+const MISSIONS = [
+  {
+    id: 0,
+    title: 'Mission 1: Future Words',
+    sub: 'Vocabulary about technology & jobs',
+    icon: '🤖',
+    xp: 100,
+    done: false,
+    score: 0,
+    qs: [
+      {
+        q: 'What does AUTOMATION mean?',
+        h: 'Think about robots in factories...',
+        opts: ['People working extra hours','Machines doing tasks automatically','A new type of smartphone','Online shopping websites'],
+        a: 1,
+        exp: '✅ AUTOMATION = machines doing tasks automatically, without human help. Example: robots on a factory line!'
+      },
+      {
+        q: 'REMOTE WORK means...',
+        h: 'Think about working from home...',
+        opts: ['Working in a big factory','Working at night','Working from home or another location, not the office','Working without any technology'],
+        a: 2,
+        exp: '✅ REMOTE WORK = working from home (or another location) instead of going to an office!'
+      },
+      {
+        q: 'SELF-CHECKOUT at a supermarket means...',
+        h: 'No cashier needed...',
+        opts: ['The cashier checks your bag','You pay using a machine by yourself','A manager checks your items','You order food online'],
+        a: 1,
+        exp: '✅ SELF-CHECKOUT = you scan and pay for your items yourself, using a machine — no cashier!'
+      },
+      {
+        q: 'AI (Artificial Intelligence) refers to...',
+        h: 'Computers that can "think"...',
+        opts: ['Advanced Internet connections','Robots that look exactly like humans','Technology that learns and makes decisions like humans','Electric cars that drive very fast'],
+        a: 2,
+        exp: '✅ AI = technology that can learn, solve problems and make decisions — like a "smart" computer brain!'
+      },
+      {
+        q: 'Which word means "jobs done completely by machines, without people"?',
+        h: 'A noun from the verb "automate"...',
+        opts: ['Streaming','Automation','eSports','Remote work'],
+        a: 1,
+        exp: '✅ AUTOMATION! When machines replace human work in factories and offices.'
+      }
+    ]
+  },
+  {
+    id: 1,
+    title: 'Mission 2: WILL Power',
+    sub: 'Use will to make predictions',
+    icon: '🔮',
+    xp: 100,
+    done: false,
+    score: 0,
+    qs: [
+      {
+        q: 'Complete: "In 50 years, people ___ travel to other planets."',
+        h: 'Prediction = will + verb (base form)',
+        opts: ['peoples will travel','will travel','will traveled','travelling'],
+        a: 1,
+        exp: '✅ WILL + base verb! → People WILL TRAVEL to other planets.'
+      },
+      {
+        q: 'Which sentence is CORRECT?',
+        h: 'Will is always followed by the base verb...',
+        opts: ['Kids will studies online.','Kids will studied online.','Kids will study online.','Kids wills study online.'],
+        a: 2,
+        exp: '✅ will + base verb (no -s, no -ed, no -ing)! → Kids WILL STUDY online.'
+      },
+      {
+        q: 'Organize the words: "scientists / will / find / a cure / for cancer"',
+        h: 'Structure: Subject + will + verb + rest',
+        opts: ['Will scientists a cure for cancer find.','Scientists for cancer will find a cure.','Scientists will find a cure for cancer.','A cure for cancer scientists will find.'],
+        a: 2,
+        exp: '✅ Scientists WILL FIND a cure for cancer. Subject + will + verb!'
+      },
+      {
+        q: '"I think the future ___ be amazing!" — Choose the correct word.',
+        h: '"I think" = prediction...',
+        opts: ['going to','is','won\'t','will'],
+        a: 3,
+        exp: '✅ "I think" signals a prediction → the future WILL be amazing!'
+      },
+      {
+        q: 'Choose the sentence that uses WILL correctly:',
+        h: 'Watch the verb form after will...',
+        opts: ['Flying cars will replaced buses.','Flying cars will replaces buses.','Flying cars will replacing buses.','Flying cars will replace buses.'],
+        a: 3,
+        exp: '✅ Flying cars WILL REPLACE buses. Always: will + base form of the verb!'
+      }
+    ]
+  },
+  {
+    id: 2,
+    title: "Mission 3: Will vs Going To",
+    sub: 'Choose the right future form',
+    icon: '⚡',
+    xp: 100,
+    done: false,
+    score: 0,
+    qs: [
+      {
+        q: '"I ___ travel to Piauí next summer. I already bought my tickets!"',
+        h: 'Already bought tickets = already planned!',
+        opts: ['will','am going to','goes to','wills'],
+        a: 1,
+        exp: '✅ Already planned → AM GOING TO! Bought tickets = it\'s arranged. Going to = plans made in advance.'
+      },
+      {
+        q: '"Paula THINKS AI ___ change the world in 50 years."',
+        h: '"Paula thinks" = her opinion / prediction...',
+        opts: ['is going to','goes to','will','won\'t'],
+        a: 2,
+        exp: '✅ "Paula thinks" = personal opinion, not a confirmed plan → WILL change the world!'
+      },
+      {
+        q: '"My brother ___ start university next year. He has already chosen his course."',
+        h: 'Already chosen = already decided...',
+        opts: ['will','going to','is going to','wills'],
+        a: 2,
+        exp: '✅ Already chosen his course = already arranged → IS GOING TO start university!'
+      },
+      {
+        q: '"I think Anthony ___ study architecture. He loves drawing!"',
+        h: '"I think" tells you this is a prediction, not a plan...',
+        opts: ['is going to','goes to','won\'t','will'],
+        a: 3,
+        exp: '✅ "I THINK" = prediction, not an arranged plan → Anthony WILL study architecture!'
+      },
+      {
+        q: 'RULE CHECK: Which sentence uses GOING TO correctly?',
+        h: 'Going to = something already planned / decided...',
+        opts: [
+          'I think robots going to take all jobs.',
+          'She is going to start her new job next Monday — she signed the contract!',
+          'Maybe scientists will going to find a cure soon.',
+          'They going to build flying cars in the future.'
+        ],
+        a: 1,
+        exp: '✅ "She IS GOING TO start her new job" — she already signed the contract = arranged plan!'
+      }
+    ]
+  },
+  {
+    id: 3,
+    title: "Mission 4: The WON'T Zone",
+    sub: "Use won't for negative predictions",
+    icon: '🚫',
+    xp: 100,
+    done: false,
+    score: 0,
+    qs: [
+      {
+        q: "What is the negative form of 'will'?",
+        h: "It's a contraction...",
+        opts: ["will not / won't","not will","don't will","willn't"],
+        a: 0,
+        exp: "✅ WILL NOT = WON'T. Both are correct! Won't is the contraction (short form) of will not."
+      },
+      {
+        q: '"People ___ need to go to an office every day in the future."',
+        h: 'Negative prediction about offices...',
+        opts: ["will need","won't need","not will need","won't needs"],
+        a: 1,
+        exp: "✅ WON'T NEED! People WON'T NEED to go to the office — remote work will be normal!"
+      },
+      {
+        q: 'Which sentence has a CORRECT negative form?',
+        h: "Look for won't + base verb...",
+        opts: [
+          "Robots will not to replace all teachers.",
+          "Robots won't replaces all teachers.",
+          "Robots won't replace all teachers.",
+          "Robots not will replace all teachers."
+        ],
+        a: 2,
+        exp: "✅ WON'T + base verb! Robots WON'T REPLACE all teachers — teaching needs human creativity!"
+      },
+      {
+        q: 'Transform to negative: "Schools in the future will disappear."',
+        h: "Replace 'will' with won't...",
+        opts: [
+          "Schools in the future not disappear.",
+          "Schools in the future won't disappear.",
+          "Schools in the future will not disappears.",
+          "Schools in the future don't will disappear."
+        ],
+        a: 1,
+        exp: "✅ Schools WON'T DISAPPEAR. Won't + base verb. Schools will exist — they'll just be different!"
+      },
+      {
+        q: '"Many cashiers ___ have jobs in 10 years because of self-checkout machines."',
+        h: 'Negative prediction about jobs...',
+        opts: ["will have","won't have","going to have","not have"],
+        a: 1,
+        exp: "✅ WON'T HAVE! Many cashiers WON'T HAVE jobs because automation is replacing them."
+      }
+    ]
+  },
+  {
+    id: 4,
+    title: 'Mission 5: Future Questions',
+    sub: 'Form interrogative sentences with will',
+    icon: '❓',
+    xp: 100,
+    done: false,
+    score: 0,
+    qs: [
+      {
+        q: 'Choose the CORRECT question form:',
+        h: 'In questions: Will + subject + verb?',
+        opts: ['You will live here?','Will you lives here?','Do you will live here?','Will you live here?'],
+        a: 3,
+        exp: '✅ WILL + subject + verb? → WILL YOU LIVE here? Will comes BEFORE the subject!'
+      },
+      {
+        q: 'Fill in: "Where ___ after you finish school?"',
+        h: 'Question form: will + you + verb...',
+        opts: ['you will live','will you live','will you lives','do you will live'],
+        a: 1,
+        exp: '✅ WILL YOU LIVE — question form! Wh-word + will + subject + base verb.'
+      },
+      {
+        q: 'Organize: "will / you / do / What / in the future / ?"',
+        h: 'Wh-question: What + will + subject + verb',
+        opts: [
+          'What you will do in the future?',
+          'What will do you in the future?',
+          'What will you do in the future?',
+          'Will what you do in the future?'
+        ],
+        a: 2,
+        exp: '✅ WHAT WILL YOU DO in the future? = Wh-word + will + subject + base verb!'
+      },
+      {
+        q: '"___ robots replace human teachers completely?" — Choose the best option:',
+        h: 'Yes/no question with will...',
+        opts: ['Do will robots replace...?','Robots will replace...?','Will robots replace...?','Will robots replaces...?'],
+        a: 2,
+        exp: '✅ WILL ROBOTS REPLACE? — Will + subject + base verb for yes/no questions!'
+      },
+      {
+        q: '"Will we still be friends in 10 years?" — This question uses...',
+        h: 'Think about the grammar structure...',
+        opts: ['Will in affirmative form','Will in interrogative (question) form','Won\'t in negative form','Going to for plans'],
+        a: 1,
+        exp: '✅ WILL in INTERROGATIVE form! WILL + we (subject) + be (verb) = question. Great for the future interview activity!'
+      }
+    ]
+  }
+];
+
+// ─── State ───────────────────────────────────────────
+let totalXP = 0, totalRight = 0;
+let curMission = null, curQ = 0, mRight = 0, answered = false;
+
+// ─── Screens ─────────────────────────────────────────
+function go(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  document.getElementById('s-' + screen).classList.add('on');
+  if (screen === 'map') renderMap();
+  if (screen === 'map' && MISSIONS.every(m => m.done)) {
+    setTimeout(showFinal, 400);
+  }
+  syncHUD();
+}
+
+function syncHUD() {
+  const pct = Math.min((totalXP / 500) * 100, 100);
+  ['xp-h','xp-p'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = totalXP; });
+  ['xp-bar','xp-bar2'].forEach(id => { const el = document.getElementById(id); if(el) el.style.width = pct + '%'; });
+  const sh = document.getElementById('score-h'); if(sh) sh.textContent = totalRight + '/25';
+}
+
+// ─── Map ─────────────────────────────────────────────
+function renderMap() {
+  const list = document.getElementById('mission-list');
+  list.innerHTML = '';
+  MISSIONS.forEach((m, i) => {
+    const locked = i > 0 && !MISSIONS[i-1].done;
+    const div = document.createElement('div');
+    div.className = 'mission-card' + (m.done ? ' done' : '') + (locked ? ' locked' : '');
+    const status = locked ? '🔒' : (m.done ? '✅' : '▶');
+    const info = m.done ? `${m.score}/5 correct · +${m.score*20} XP earned` : (locked ? 'Complete previous mission first' : 'Ready — click to play!');
+    div.innerHTML = `<span class="m-icon">${m.icon}</span><div class="m-info"><h3>${m.title}</h3><p>${info} · ${m.xp} XP available</p></div><span class="m-status">${status}</span>`;
+    if (!locked) div.onclick = () => startMission(i);
+    list.appendChild(div);
+  });
+}
+
+// ─── Mission Play ─────────────────────────────────────
+function startMission(i) {
+  curMission = MISSIONS[i];
+  curQ = 0; mRight = 0; answered = false;
+  renderBanner();
+  renderDots();
+  renderQ();
+  go('play');
+}
+
+function renderBanner() {
+  const m = curMission;
+  document.getElementById('m-banner').innerHTML = `
+    <div class="mission-banner fade">
+      <span class="mb-icon">${m.icon}</span>
+      <div class="mb-title"><h2>${m.title}</h2><p>${m.sub} · ${m.xp} XP</p></div>
+    </div>`;
+}
+
+function renderDots() {
+  const c = document.getElementById('dots');
+  c.innerHTML = '';
+  curMission.qs.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === curQ ? ' active' : '');
+    d.id = 'd' + i;
+    c.appendChild(d);
+  });
+  document.getElementById('q-counter').textContent = `Q ${curQ+1}/${curMission.qs.length}`;
+}
+
+function renderQ() {
+  answered = false;
+  document.getElementById('btn-next').style.display = 'none';
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback-box'; fb.textContent = '';
+
+  const q = curMission.qs[curQ];
+  document.getElementById('q-area').innerHTML = `
+    <div class="question-box fade">
+      <div class="q-number">Question ${curQ+1} of ${curMission.qs.length}</div>
+      <div class="q-text">${q.q}</div>
+      ${q.h ? `<div class="q-hint">💡 ${q.h}</div>` : ''}
+    </div>
+    <div class="options-grid fade" id="opts">
+      ${q.opts.map((o, i) => `<button class="opt-btn" id="o${i}" onclick="pick(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+    </div>`;
+}
+
+function pick(sel) {
+  if (answered) return;
+  answered = true;
+  const q = curMission.qs[curQ];
+  const ok = sel === q.a;
+
+  q.opts.forEach((_, i) => {
+    const btn = document.getElementById('o' + i);
+    btn.disabled = true;
+    if (i === q.a) btn.classList.add('correct');
+    else if (i === sel) btn.classList.add('wrong');
+  });
+
+  // dot
+  const dot = document.getElementById('d' + curQ);
+  dot.classList.remove('active');
+  dot.classList.add(ok ? 'correct' : 'wrong');
+
+  // feedback
+  const fb = document.getElementById('feedback');
+  fb.textContent = ok ? q.exp : '❌ ' + q.exp;
+  fb.className = 'feedback-box show ' + (ok ? 'ok' : 'no');
+
+  if (ok) { mRight++; totalRight++; totalXP += 20; }
+  syncHUD();
+
+  const nb = document.getElementById('btn-next');
+  nb.style.display = 'inline-block';
+  nb.textContent = curQ < curMission.qs.length - 1 ? 'NEXT ➤' : '🏁 FINISH';
+}
+
+function nextQ() {
+  curQ++;
+  if (curQ >= curMission.qs.length) {
+    finishMission();
+  } else {
+    const nextDot = document.getElementById('d' + curQ);
+    if (nextDot && !nextDot.classList.contains('correct') && !nextDot.classList.contains('wrong'))
+      nextDot.classList.add('active');
+    document.getElementById('q-counter').textContent = `Q ${curQ+1}/${curMission.qs.length}`;
+    renderQ();
+  }
+}
+
+function finishMission() {
+  curMission.done = true;
+  curMission.score = mRight;
+  const xpEarned = mRight * 20;
+
+  let icon, title;
+  if (mRight === 5) { icon = '🏆'; title = 'PERFECT SCORE!'; }
+  else if (mRight >= 4) { icon = '🎉'; title = 'Mission Complete!'; }
+  else if (mRight >= 3) { icon = '👍'; title = 'Good Job!'; }
+  else { icon = '💪'; title = 'Keep Trying!'; }
+
+  document.getElementById('done-icon').textContent = icon;
+  document.getElementById('done-title').textContent = title;
+  document.getElementById('done-msg').textContent = `"${curMission.title}" — ${mRight}/5 correct`;
+  document.getElementById('done-xp').textContent = '+' + xpEarned + ' XP';
+  go('done');
+}
+
+// ─── Final Results ────────────────────────────────────
+function showFinal() {
+  const pct = (totalRight / 25) * 100;
+  let grade, icon, note;
+
+  if (pct >= 90) {
+    icon = '🏆'; grade = '🌟 INCREDIBLE! You are the Future Master!';
+    note = 'Perfect command of will, won\'t, going to and future vocabulary. Awesome work!';
+  } else if (pct >= 70) {
+    icon = '🎉'; grade = '⭐ GREAT JOB! Almost perfect!';
+    note = 'You have a strong grasp of the future tense. Review the missions where you lost points to be perfect!';
+  } else if (pct >= 50) {
+    icon = '💪'; grade = '👍 GOOD EFFORT! Keep practicing!';
+    note = 'You know the basics! Focus on will vs going to and the question form to improve.';
+  } else {
+    icon = '🔄'; grade = '📚 Time to Review!';
+    note = 'Don\'t give up! Go back to your lessons on will, won\'t, and going to and try again!';
+  }
+
+  document.getElementById('f-icon').textContent = icon;
+  document.getElementById('f-xp').textContent = totalXP + ' XP';
+  document.getElementById('f-grade').textContent = grade;
+  document.getElementById('f-note').textContent = totalRight + '/25 correct · ' + note;
+
+  // badges
+  const BADGES = [
+    { cond: totalRight >= 5,  label: '🤖 Tech Expert' },
+    { cond: totalRight >= 10, label: '🔮 Will Master' },
+    { cond: totalRight >= 15, label: '⚡ Future Predictor' },
+    { cond: totalRight >= 20, label: "🚫 Won't Warrior" },
+    { cond: totalRight >= 25, label: '❓ Question Champion' }
+  ];
+
+  const bc = document.getElementById('f-badges');
+  bc.innerHTML = BADGES.map(b => `<span class="badge ${b.cond ? 'earned' : ''}">${b.label}</span>`).join('');
+
+  go('final');
+}
+
+// ─── Restart ─────────────────────────────────────────
+function restart() {
+  MISSIONS.forEach(m => { m.done = false; m.score = 0; });
+  totalXP = 0; totalRight = 0;
+  curMission = null; curQ = 0; mRight = 0;
+  syncHUD();
+  go('map');
+}
+</script>
+</body>
+</html>
